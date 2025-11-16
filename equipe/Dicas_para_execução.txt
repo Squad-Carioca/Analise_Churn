@@ -1,0 +1,8 @@
+#para subir o ambiente virtual
+
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+C:\git\IApDev-ml-churn-xai\venv\Scripts\Activate.ps1
+
+pip install -r requirements.txt
+o Solução de Problemas: Se o VS Code mostrar erros de Import could not be resolved, pressione Ctrl+Shift+P, procure por Python: Select Interpreter e escolha a opção que contém ('venv': venv).

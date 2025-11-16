@@ -1,0 +1,10 @@
+artifact_location: file:C:\git\Analise_Churn\mlruns/259038960284616008/models/m-c11a857168e1406698d63f1d0297b3b0/artifacts
+creation_timestamp: 1763227220524
+experiment_id: '259038960284616008'
+last_updated_timestamp: 1763227231182
+model_id: m-c11a857168e1406698d63f1d0297b3b0
+model_type: null
+name: model
+source_run_id: c8ccc70fad96464382d51568e0465996
+status: 2
+status_message: null

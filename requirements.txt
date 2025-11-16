@@ -1,0 +1,10 @@
+fastapi 
+uvicorn[standard] 
+scikit-learn 
+pandas 
+mlflow 
+joblib 
+jupyter 
+shap 
+python-multipart 
+jinja2 # Necessário para servir o HTML com FastAPI

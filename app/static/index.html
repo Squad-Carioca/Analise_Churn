@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preditor de Churn</title>
+<style>
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+.container {
+    background-color: #fff;
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    max-width: 800px;
+    width: 100%;
+}
+h1 {
+    text-align: center;
+    color: #2c3e50;
+}
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+input, select {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+button {
+    grid-column: 1 / -1;
+    padding: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+button:hover {
+    background-color: #0056b3;
+}
+#result-container {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border-radius: 8px;
+    background-color: #e9ecef;
+    display: none;
+}
+#result-container h2 {
+    margin-top: 0;
+}
+#explanation-list {
+    list-style-type: '👉';
+    padding-left: 20px;
+}
+#explanation-list li {
+    margin-bottom: 0.5rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Análise de Risco de Churn de Cliente</h1>
+<form id="churn-form" class="form-grid">
+
+<!-- Estado -->
+<div class="form-group">
+    <label for="Estado">Estado</label>
+    <select id="Estado" name="Estado">
+        <option value="KS">KS</option><option value="OH">OH</option><option value="NJ">NJ</option>
+        <option value="OK">OK</option><option value="AL">AL</option><option value="MA">MA</option>
+        <option value="MO">MO</option><option value="WV">WV</option><option value="RI">RI</option>
+        <option value="IA">IA</option><option value="MT">MT</option><option value="ID">ID</option>
+        <option value="VT">VT</option><option value="VA">VA</option><option value="TX">TX</option>
+        <option value="FL">FL</option><option value="CO">CO</option><option value="AZ">AZ</option>
+        <option value="NE">NE</option><option value="WY">WY</option><option value="IL">IL</option>
+        <option value="NH">NH</option><option value="LA">LA</option><option value="GA">GA</option>
+        <option value="AK">AK</option><option value="MD">MD</option><option value="AR">AR</option>
+        <option value="WI">WI</option><option value="OR">OR</option><option value="DE">DE</option>
+        <option value="IN">IN</option><option value="UT">UT</option><option value="CA">CA</option>
+        <option value="SD">SD</option><option value="NC">NC</option><option value="WA">WA</option>
+        <option value="MN">MN</option><option value="NM">NM</option><option value="NV">NV</option>
+        <option value="DC">DC</option><option value="NY">NY</option><option value="KY">KY</option>
+        <option value="ME">ME</option><option value="MS">MS</option><option value="MI">MI</option>
+        <option value="SC">SC</option><option value="TN">TN</option><option value="PA">PA</option>
+        <option value="HI">HI</option><option value="ND">ND</option><option value="CT">CT</option>
+    </select>
+</div>
+
+<!-- TempoConta -->
+<div class="form-group">
+    <label for="TempoConta">Tempo de Conta</label>
+    <input type="number" id="TempoConta" name="TempoConta" value="0" required>
+</div>
+
+<!-- CodigoArea -->
+<div class="form-group">
+    <label for="CodigoArea">Código de Área</label>
+    <select id="CodigoArea" name="CodigoArea">
+        <option value="408">408</option>
+        <option value="415">415</option>
+        <option value="510">510</option>
+    </select>
+</div>
+
+<!-- Plano Internacional -->
+<div class="form-group">
+    <label for="PlanoInternacional">Plano Internacional</label>
+    <select id="PlanoInternacional" name="PlanoInternacional">
+        <option value="Yes">Sim</option>
+        <option value="No">Não</option>
+    </select>
+</div>
+
+<!-- Plano Correio de Voz -->
+<div class="form-group">
+    <label for="PlanoCorreioVoz">Plano de Correio de Voz</label>
+    <select id="PlanoCorreioVoz" name="PlanoCorreioVoz">
+        <option value="Yes">Sim</option>
+        <option value="No">Não</option>
+    </select>
+</div>
+
+<!-- Número de Mensagens de Voz -->
+<div class="form-group">
+    <label for="NumerodeMensagensdeVoz">Número de Mensagens de Voz</label>
+    <input type="number" id="NumerodeMensagensdeVoz" name="NumerodeMensagensdeVoz" value="0" required>
+</div>
+
+<!-- Total Minutos Dia -->
+<div class="form-group">
+    <label for="TotalMinutosDia">Total de Minutos (Dia)</label>
+    <input type="number" step="0.01" id="TotalMinutosDia" name="TotalMinutosDia" value="0" required>
+</div>
+
+<!-- Total Chamadas Dia -->
+<div class="form-group">
+    <label for="TotalChamadasDia">Total de Chamadas (Dia)</label>
+    <input type="number" id="TotalChamadasDia" name="TotalChamadasDia" value="0" required>
+</div>
+
+<!-- Custo Total Dia -->
+<div class="form-group">
+    <label for="CustoTotalDia">Custo Total (Dia)</label>
+    <input type="number" step="0.01" id="CustoTotalDia" name="CustoTotalDia" value="0" required>
+</div>
+
+<!-- Tarde/Noite Minutos -->
+<div class="form-group">
+    <label for="TotalMinutosTardeNoite">Total Minutos (Tarde/Noite)</label>
+    <input type="number" step="0.01" id="TotalMinutosTardeNoite" name="TotalMinutosTardeNoite" value="0" required>
+</div>
+
+<div class="form-group">
+    <label for="TotalChamadasTardeNoite">Total Chamadas (Tarde/Noite)</label>
+    <input type="number" id="TotalChamadasTardeNoite" name="TotalChamadasTardeNoite" value="0" required>
+</div>
+
+<div class="form-group">
+    <label for="CustoTotalTardeNoite">Custo Total (Tarde/Noite)</label>
+    <input type="number" step="0.01" id="CustoTotalTardeNoite" name="CustoTotalTardeNoite" value="0" required>
+</div>
+
+<!-- Noturno -->
+<div class="form-group">
+    <label for="TotalMinutosNoturno">Total Minutos (Noturno)</label>
+    <input type="number" step="0.01" id="TotalMinutosNoturno" name="TotalMinutosNoturno" value="0" required>
+</div>
+
+<div class="form-group">
+    <label for="TotalChamadasNoturno">Total Chamadas (Noturno)</label>
+    <input type="number" id="TotalChamadasNoturno" name="TotalChamadasNoturno" value="0" required>
+</div>
+
+<div class="form-group">
+    <label for="CustoTotalNoturno">Custo Total (Noturno)</label>
+    <input type="number" step="0.01" id="CustoTotalNoturno" name="CustoTotalNoturno" value="0" required>
+</div>
+
+<!-- Internacionais -->
+<div class="form-group">
+    <label for="TotalMinutosInternacionais">Total Minutos Internacionais</label>
+    <input type="number" step="0.01" id="TotalMinutosInternacionais" name="TotalMinutosInternacionais" value="0" required>
+</div>
+
+<div class="form-group">
+    <label for="TotalChamadasInternacionais">Total Chamadas Internacionais</label>
+    <input type="number" id="TotalChamadasInternacionais" name="TotalChamadasInternacionais" value="0" required>
+</div>
+
+<div class="form-group">
+    <label for="CustoTotalInternacional">Custo Total Internacional</label>
+    <input type="number" step="0.01" id="CustoTotalInternacional" name="CustoTotalInternacional" value="0" required>
+</div>
+
+<!-- Suporte -->
+<div class="form-group">
+    <label for="ChamadasSuporte">Chamadas ao Suporte</label>
+    <input type="number" id="ChamadasSuporte" name="ChamadasSuporte" value="0" required>
+</div>
+
+<button type="submit">Analisar Cliente</button>
+</form>
+
+<div id="result-container">
+    <h2>Resultado da Análise</h2>
+    <p><strong>Previsão de Churn:</strong> <span id="prediction"></span></p>
+    <p><strong>Probabilidade de Churn:</strong> <span id="probability"></span></p>
+    <h3>Principais Fatores de Influência:</h3>
+    <ul id="explanation-list"></ul>
+</div>
+</div>
+
+<script>
+document.getElementById('churn-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = {};
+    // Converte os dados do formulário para um objeto JSON, tratando os tipos
+    formData.forEach((value, key) => {
+        // Tenta converter para número, se falhar, mantém como string
+        const numValue = parseFloat(value);
+        data[key] = isNaN(numValue) ? value : numValue;
+    });
+    // SeniorCitizen é um caso especial
+    //data.SeniorCitizen = parseInt(data.SeniorCitizen);
+
+    const resultContainer = document.getElementById('result-container');
+    resultContainer.style.display = 'block';
+    document.getElementById('prediction').textContent = "Calculando...";
+    document.getElementById('probability').textContent = "...";
+    document.getElementById('explanation-list').innerHTML = "";
+
+    try {
+        const response = await fetch('/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Erro na API');
+        }
+
+        const result = await response.json();
+        document.getElementById('prediction').textContent = result.predicao;
+        document.getElementById('probability').textContent = `${(result.probabilidade_churn * 100).toFixed(2)}%`;
+        const explanationList = document.getElementById('explanation-list');
+        result.explicacao.forEach(text => {
+            const li = document.createElement('li');
+            li.textContent = text;
+            explanationList.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Erro:', error);
+        document.getElementById('prediction').textContent = `Erro: ${error.message}`;
+    }
+});
+</script>
+</body>
+</html>

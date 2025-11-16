@@ -1,0 +1,14 @@
+artifact_uri: file:C:\git\Analise_Churn\mlruns/259038960284616008/4a7172bf8cfc4f46adf204f8fd41b454/artifacts
+end_time: 1763223585116
+entry_point_name: ''
+experiment_id: '259038960284616008'
+lifecycle_stage: active
+run_id: 4a7172bf8cfc4f46adf204f8fd41b454
+run_name: respected-fly-784
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1763223570298
+status: 3
+tags: []
+user_id: Claudio

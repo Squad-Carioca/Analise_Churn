@@ -1,0 +1,14 @@
+artifact_uri: file:C:\git\Analise_Churn\mlruns/259038960284616008/cbb0350f8a534643a2d7259c8b5cba7a/artifacts
+end_time: 1763301247553
+entry_point_name: ''
+experiment_id: '259038960284616008'
+lifecycle_stage: active
+run_id: cbb0350f8a534643a2d7259c8b5cba7a
+run_name: gregarious-robin-486
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1763301234748
+status: 3
+tags: []
+user_id: Claudio
