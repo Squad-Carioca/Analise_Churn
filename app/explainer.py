@@ -4,6 +4,7 @@ import joblib
 import pandas as pd
 import shap
 import logging
+from app.generative import gerar_relatorio
 
 logger = logging.getLogger(__name__)
 
@@ -31,35 +32,52 @@ def get_prediction_and_explanation(cliente_input_df: pd.DataFrame):
 
     # 2. Pré-processar os dados para o explicador
     dados_processados = pipeline_completo.named_steps['preprocessor'].transform(cliente_input_df)
-
+    #print(dados_processados)
     # 3. Calcular os valores SHAP - a saída é 3D (amostras, features, classes)
     shap_values = explainer.shap_values(dados_processados.toarray())
+    #print(shap_values)
     # A saída é 3D (1, 45, 2). Queremos a fatia para a classe 1 (Churn).
     # Isso extrai a matriz 2D (1, 45) que corresponde ao impacto na classe "Churn".
     shap_values_churn = shap_values[:, :, 1]
 
     # 4. Formatar a explicação de forma robusta
     feature_names = pipeline_completo.named_steps['preprocessor'].get_feature_names_out()
+    #print(feature_names)
     # Agora o Pandas recebe a matriz 2D correta
     df_shap = pd.DataFrame(shap_values_churn, columns=feature_names)
+    #print(df_shap)
     df_shap_agg = pd.Series(dtype='float64')
 
     # Agrupamos os impactos pela feature original
     for col in df_shap.columns:
         original_feature = col.split('__')[1].split('_')[0]
+        #print(original_feature)
         if original_feature not in df_shap_agg:
             df_shap_agg[original_feature] = 0
-
-        df_shap_agg[original_feature] += int(df_shap[col].iloc[0])
+        #print(df_shap[col].iloc[0])S
+        #print(int(df_shap[col]))
+        df_shap_agg[original_feature] += df_shap[col].iloc[0]
 
     fatores_importantes = df_shap_agg.abs().sort_values(ascending=False)
 
     explicacao_final = []
 
+    #criação de relatório com LLM
+    cliente = {}
+
     for feature, _ in fatores_importantes.head(3).items():
         impact = df_shap_agg[feature]
         direcao = "AUMENTA" if impact > 0 else "DIMINUI"
         explicacao_final.append(f"O fator '{feature}' {direcao} o risco de churn.")
+
+    cliente['predicao'] = predicao_texto
+    cliente['probabilidade_churn'] = float(probabilidade_churn)
+    cliente['explicacao'] = explicacao_final
+    
+    # Gerar o relatório 
+    relatorio_gerado = gerar_relatorio(cliente)
+
+
 
     return {
         "predicao": predicao_texto,

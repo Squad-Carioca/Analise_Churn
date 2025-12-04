@@ -1,0 +1,14 @@
+artifact_uri: file:C:\git\Analise_Churn\mlruns/259038960284616008/5987ef6ab44848009aa19417ffb93ef6/artifacts
+end_time: 1764801632916
+entry_point_name: ''
+experiment_id: '259038960284616008'
+lifecycle_stage: active
+run_id: 5987ef6ab44848009aa19417ffb93ef6
+run_name: bustling-bee-13
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764801567175
+status: 3
+tags: []
+user_id: Claudio
